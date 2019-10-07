@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<GUIConfig encoding="ru_RU.utf8">
+  <Header name="Input">
+    <ListBox name="Input type">
+      <Item name="Points"/>
+      <Item name="Camera"/>
+      <Item name="File"/>
+    </ListBox>
+  </Header>
+
+  <Header name="Detector">
+    <ListBox name="Detector type">
+      <Item name="None"/>
+      <Item name="Motion_VIBE"/>
+      <Item name="Motion_MOG"/>
+      <Item name="Motion_GMG"/>
+      <Item name="Motion_CNT"/>
+      <Item name="Motion_SuBSENSE"/>
+      <Item name="Motion_LOBSTER"/>
+      <Item name="Motion_MOG2"/>
+      <Item name="Face_HAAR"/>
+      <Item name="Pedestrian_HOG"/>
+      <Item name="Pedestrian_C4"/>
+      <Item name="SSD_MobileNet"/>
+      <Item name="Yolo_OCV"/>
+      <Item name="Yolo_Darknet"/>
+    </ListBox>
+  </Header>    
+
+  <Header name="Tracker">
+    <ListBox name="Tracker type">
+      <Item name="Hungarian"/>
+      <Item name="Bipartiate"/>
+    </ListBox>
+  </Header>
+
+  <Header name="Output">
+    <ListBox name="Output type">
+      <Item name="Points"/>
+      <Item name="File"/>
+    </ListBox>
+  </Header>
+
+  <Header name="Generator">
+    <Button name="Generate"/>      
+  </Header>
+</GUIConfig>
+
+<FilesConfig>
+
+  <Component name="Generator">
+    <FilesList name="Common">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="Executable">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="Shared library">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="Static library">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>    
+    <FilesList name="Cmake">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>  
+  </Component>
+
+  <Component name="Input">
+    <FilesList name="Points">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="File">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>    
+  </Component>
+
+  <Component name="Detector">
+    <FilesList name="None">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+
+    <FilesList name="Motion_VIBE">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="Motion_MOG">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Motion_GMG">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Motion_CNT">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Motion_SuBSENSE">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Motion_LOBSTER">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Motion_MOG2">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Face_HAAR">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Pedestrian_HOG">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Pedestrian_C4">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="SSD_MobileNet">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Yolo_OCV">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+    <FilesList name="Yolo_Darknet">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>      
+  </Component>
+
+  <Component name="Tracker">
+    <FilesList name="Hungarian">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="Bipartiate">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>    
+  </Component>
+
+  <Component name="Output">
+    <FilesList name="Points">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+    <FilesList name="File">
+      <File srcpath="" name="" targetpath=""/>
+    </FilesList>
+  </Component>
+
+</FilesConfig>
