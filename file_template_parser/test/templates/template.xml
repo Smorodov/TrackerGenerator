@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<f_template extension=".test">
+
+  <arg name="adjective" default="a1_arg" />
+  <arg name="noun" default="a2_arg" />
+  <arg name="ai_name" default="a3_arg" />
+
+  <body>
+
+<![CDATA[
+Strange $(arg adjective) $(arg noun) was seen.
+The $(arg noun) was peaceful and cool.
+
+<task action="$(arg ai_name)">
+
+  <!--Interface block-->
+  <interface id="0" type="asynchronous">
+    
+    <!--Input block-->
+    <in>    
+      <what>
+        <arg word="test"/>
+      </what>
+    </in>
+
+  </interface>
+
+</task> 
+]]>
+
+  </body>
+
+</f_template>
