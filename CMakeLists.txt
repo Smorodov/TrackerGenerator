@@ -6,8 +6,10 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) 
 
+if (MSVC)
+    add_subdirectory(glfw)
+endif()
 add_subdirectory(zlib)
-add_subdirectory(glfw)
 
 set(project_name TrackerGenerator)
 
@@ -20,7 +22,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -std=c++11")
 SET(SOURCE
 main/main.cpp
 main/nativefiledialog/src/nfd_common.c
-main/nativefiledialog/src/nfd_win.cpp
 ImGuiColorTextEdit/TextEditor.cpp
 imgui/examples/libs/gl3w/GL/gl3w.c
 imgui/examples/imgui_impl_glfw.cpp
@@ -35,6 +36,26 @@ SET(HEADERS
 main/nativefiledialog/src/include/nfd.h
 ImGuiColorTextEdit/TextEditor.h
 )
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+    find_package(OpenGL REQUIRED)
+    find_package(glfw3 REQUIRED)
+    #find_package(zlib REQUIRED)
+
+    if (GTK3_FOUND)
+        include_directories(${GTK3_INCLUDE_DIRS})
+        LINK_DIRECTORIES(${GTK3_LIBRARY_DIRS})
+        add_definitions(${GTK3_CFLAGS_OTHER})
+    else()
+        message("GTK_FOUND")
+    endif()
+
+    SET(SOURCE ${SOURCE} main/nativefiledialog/src/nfd_gtk.c)
+elseif (MSVC)
+    SET(SOURCE ${SOURCE} main/nativefiledialog/src/nfd_win.cpp)
+endif()
 
 file(GLOB ADD_HEADERS "./imgui/*.h*")
 SET(HEADERS ${HEADERS} ${ADD_HEADERS})
@@ -80,19 +101,27 @@ add_library(ft_parser STATIC
 # ----------------------------------------------------------------------------  
 # создаем проект
 # ----------------------------------------------------------------------------
-  ADD_EXECUTABLE( ${project_name}
-  				  ${SOURCE}
-  				  ${HEADERS}
-  				  )
+ADD_EXECUTABLE(${project_name} ${SOURCE} ${HEADERS})
 
 # ----------------------------------------------------------------------------
 # и Lib-ы opencv 
 # ----------------------------------------------------------------------------
+if (CMAKE_COMPILER_IS_GNUCXX)
+    TARGET_LINK_LIBRARIES(${project_name} ${GTK3_LIBRARIES} glfw zlib ft_parser ${Boost_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} dl)
+
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/GUIConfig.xml DESTINATION ${CMAKE_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/misc/fonts/a_FuturaOrto.TTF DESTINATION ${CMAKE_BINARY_DIR})
+
+elseif (MSVC)
 TARGET_LINK_LIBRARIES(${project_name}
-					  optimized ${CMAKE_BINARY_DIR}/Release/glfw3.lib
-					  debug 	${CMAKE_BINARY_DIR}/Debug/glfw3.lib					  
-					  optimized ${CMAKE_BINARY_DIR}/Release/zlib.lib
-					  debug     ${CMAKE_BINARY_DIR}/Debug/zlib.lib				  
-					  ft_parser
-					  opengl32.lib
-					  )
+                        optimized ${CMAKE_BINARY_DIR}/Release/glfw3.lib
+                        debug 	${CMAKE_BINARY_DIR}/Debug/glfw3.lib
+                        optimized ${CMAKE_BINARY_DIR}/Release/zlib.lib
+                        debug     ${CMAKE_BINARY_DIR}/Debug/zlib.lib
+                        ft_parser
+                        opengl32.lib
+                        )
+
+                    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/GUIConfig.xml DESTINATION ${CMAKE_BINARY_DIR}/Debug)
+                    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/misc/fonts/a_FuturaOrto.TTF DESTINATION ${CMAKE_BINARY_DIR}/Release)
+endif()

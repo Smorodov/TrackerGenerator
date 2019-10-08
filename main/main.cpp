@@ -4,6 +4,7 @@
 #include <iterator>
 #include <map>
 #include <string>
+#include <thread>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
 #include "imgui.h"
@@ -19,7 +20,7 @@
 #include "Observer.h"
 #include "Observable.h"
 
-#include "TinyXML.h"
+#include "../TinyXML/tinyxml.h"
 
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
 // Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
@@ -74,27 +75,27 @@ public:
     {
         Type = GUIWidget::None;
         currentItemIndex = 0;
-        stringToWidgetType = boost::assign::map_list_of
-            ("None",None)
-            ("Header",Header)
-            ("Label",Label)
-            ("Slider",Slider)
-            ("Button",Button)
-            ("CheckBox",CheckBox)
-            ("TextInput",TextInput)
-            ("ListBox",ListBox)
-            ("ListBoxItem",ListBoxItem);
 
-        widgetTypeToString = boost::assign::map_list_of
-        (None, "None")
-            (Header, "Header")
-            (Label, "Label")
-            (Slider, "Slider")
-            (Button, "Button")
-            (CheckBox, "CheckBox")
-            (TextInput, "TextInput")
-            (ListBox, "ListBox")
-            (ListBoxItem, "ListBoxItem");
+        stringToWidgetType.emplace("None", None);
+            stringToWidgetType.emplace("Header",Header);
+            stringToWidgetType.emplace("Label",Label);
+            stringToWidgetType.emplace("Slider",Slider);
+            stringToWidgetType.emplace("Button",Button);
+            stringToWidgetType.emplace("CheckBox",CheckBox);
+            stringToWidgetType.emplace("TextInput",TextInput);
+            stringToWidgetType.emplace("ListBox",ListBox);
+            stringToWidgetType.emplace("ListBoxItem",ListBoxItem);
+
+
+            widgetTypeToString.emplace(None, "None");
+            widgetTypeToString.emplace(Header, "Header");
+            widgetTypeToString.emplace(Label, "Label");
+            widgetTypeToString.emplace(Slider, "Slider");
+            widgetTypeToString.emplace(Button, "Button");
+            widgetTypeToString.emplace(CheckBox, "CheckBox");
+            widgetTypeToString.emplace(TextInput, "TextInput");
+            widgetTypeToString.emplace(ListBox, "ListBox");
+            widgetTypeToString.emplace(ListBoxItem, "ListBoxItem");
     }
 
     ~GUIWidget()
@@ -339,7 +340,7 @@ public:
         }
     }
 
-    MainWindow::~MainWindow()
+    ~MainWindow()
     {
         if (thr != nullptr)
         {
@@ -403,7 +404,7 @@ public:
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
         // Load Fonts
-        io.Fonts->AddFontFromFileTTF("../../misc/fonts/a_FuturaOrto.TTF", 20, NULL, io.Fonts->GetGlyphRangesCyrillic());
+        io.Fonts->AddFontFromFileTTF("a_FuturaOrto.TTF", 20, NULL, io.Fonts->GetGlyphRangesCyrillic());
     }
 
     // -----------------------------
@@ -431,8 +432,7 @@ public:
                         OldSchoolTheme,
                         Strings
         };
-        std::map<StringID,std::string> stringToCaption;
-        stringToCaption = boost::assign::map_list_of
+        std::map<StringID,std::string> stringToCaption = boost::assign::map_list_of
             (Preview, "Preview")
             (File, "File")
             (Save, "Save")
@@ -535,7 +535,7 @@ public:
     // -----------------------------
     // 
     // -----------------------------
-    void MainWindow::worker(void)
+    void worker(void)
     {
         isRunning = true;
         InitGraphics();
@@ -594,7 +594,7 @@ public:
         isRunning = false;
         Notify<MainWindowObservers::OnCloseEvent>();
     }
-    void MainWindow::Run(void)
+    void Run(void)
     {
         if (!isRunning)
         {
@@ -603,7 +603,7 @@ public:
         }
     }
 
-    void MainWindow::Stop(void)
+    void Stop(void)
     {
         if (isRunning)
         {
@@ -651,7 +651,7 @@ public:
 
         while (worker_.isRunning)
         {
-            Sleep(100);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             finished = true;
         }
         worker_.Stop();
