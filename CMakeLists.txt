@@ -14,8 +14,8 @@ add_subdirectory(zlib)
 set(project_name TrackerGenerator)
 
 project(${project_name})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -std=c++11")
+#target_compile_features(${project_name} INTERFACE cxx_std_17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -std:c++17")
 #----------------------------------------------------------------------------  
 # ищем все .cpp и .h файлы и добавляем их в наш проект 
 # ----------------------------------------------------------------------------
@@ -113,6 +113,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/misc/fonts/a_FuturaOrto.TTF DESTINATION ${CMAKE_BINARY_DIR})
 
 elseif (MSVC)
+
 TARGET_LINK_LIBRARIES(${project_name}
                         optimized ${CMAKE_BINARY_DIR}/Release/glfw3.lib
                         debug 	${CMAKE_BINARY_DIR}/Debug/glfw3.lib
@@ -124,4 +125,7 @@ TARGET_LINK_LIBRARIES(${project_name}
 
                     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/GUIConfig.xml DESTINATION ${CMAKE_BINARY_DIR}/Debug)
                     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/misc/fonts/a_FuturaOrto.TTF DESTINATION ${CMAKE_BINARY_DIR}/Release)
+                    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/GUIConfig.xml DESTINATION ${CMAKE_BINARY_DIR}/Release)
+                    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/misc/fonts/a_FuturaOrto.TTF DESTINATION ${CMAKE_BINARY_DIR}/Debug)
+
 endif()

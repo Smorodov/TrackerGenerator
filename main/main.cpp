@@ -20,6 +20,8 @@
 #include "Observer.h"
 #include "Observable.h"
 
+#include "magic_enum.hpp"
+
 #include "../TinyXML/tinyxml.h"
 
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
@@ -60,9 +62,6 @@ public:
         ListBoxItem
     };
 
-    std::map<std::string, WidgetType> stringToWidgetType;
-    std::map<WidgetType, std::string> widgetTypeToString;
-
     WidgetType Type;
     std::string Name;
     std::string Value;
@@ -75,35 +74,26 @@ public:
     {
         Type = GUIWidget::None;
         currentItemIndex = 0;
-
-        stringToWidgetType.emplace("None", None);
-            stringToWidgetType.emplace("Header",Header);
-            stringToWidgetType.emplace("Label",Label);
-            stringToWidgetType.emplace("Slider",Slider);
-            stringToWidgetType.emplace("Button",Button);
-            stringToWidgetType.emplace("CheckBox",CheckBox);
-            stringToWidgetType.emplace("TextInput",TextInput);
-            stringToWidgetType.emplace("ListBox",ListBox);
-            stringToWidgetType.emplace("ListBoxItem",ListBoxItem);
-
-
-            widgetTypeToString.emplace(None, "None");
-            widgetTypeToString.emplace(Header, "Header");
-            widgetTypeToString.emplace(Label, "Label");
-            widgetTypeToString.emplace(Slider, "Slider");
-            widgetTypeToString.emplace(Button, "Button");
-            widgetTypeToString.emplace(CheckBox, "CheckBox");
-            widgetTypeToString.emplace(TextInput, "TextInput");
-            widgetTypeToString.emplace(ListBox, "ListBox");
-            widgetTypeToString.emplace(ListBoxItem, "ListBoxItem");
     }
 
     ~GUIWidget()
     {
     }
+
     std::string GetTypeString(void)
     {
-        return widgetTypeToString[Type];
+        return std::string(magic_enum::enum_name(Type));
+    }
+
+    WidgetType GetEnumFromString(std::string type)
+    {
+        // String name to enum value.
+        auto w = magic_enum::enum_cast<WidgetType>(type);
+        if (w.has_value())
+        {
+            return static_cast<WidgetType>(w.value());
+        }
+        return WidgetType::None;
     }
     void Call(GUIWidget& eventSource)
     {
@@ -432,6 +422,7 @@ public:
                         OldSchoolTheme,
                         Strings
         };
+
         std::map<StringID,std::string> stringToCaption = boost::assign::map_list_of
             (Preview, "Preview")
             (File, "File")
